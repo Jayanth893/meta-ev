@@ -1,3 +1,14 @@
+---
+title: Meta-Ev
+emoji: 🚀
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: 5.0.1
+app_file: app.py
+pinned: false
+---
+
 # 🚀 JobApplyEnv
 
 A realistic, AI-driven environment simulating real-world job application decisions. Train baseline or reinforcement learning agents to intelligently match candidate profiles with job postings and receive immediate rewards based on their decisions.
