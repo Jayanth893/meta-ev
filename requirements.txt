@@ -2,3 +2,4 @@ gradio
 pyyaml
 pandas
 matplotlib
+huggingface-hub
