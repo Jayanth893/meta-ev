@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Gradio / Env
+.gradio/
+logs.txt
+rl_model.json
+comparison_results.txt
+
+# OS
+.DS_Store
+Thumbs.db

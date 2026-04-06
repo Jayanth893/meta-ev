@@ -1,0 +1,14 @@
+name: JobApplyEnv
+version: 1.0
+
+state_space:
+  candidate_skills: list[string]
+  experience_level: string
+  job_description: string
+  company_type: string
+
+action_space:
+  apply: boolean
+  resume_version: string
+
+reward_range: [-0.5, 1.0]

@@ -1,0 +1,242 @@
+[
+  {
+    "description": "React frontend developer for consumer web app",
+    "required_skills": ["React", "JavaScript", "HTML", "CSS"],
+    "experience_level": "Junior",
+    "company_type": "startup",
+    "location": "Remote",
+    "salary": "$70k - $90k"
+  },
+  {
+    "description": "Backend Node.js developer handling microservices",
+    "required_skills": ["Node.js", "Express", "Docker"],
+    "experience_level": "Mid",
+    "company_type": "enterprise",
+    "location": "New York, NY",
+    "salary": "$110k - $140k"
+  },
+  {
+    "description": "Fullstack developer with React and Node",
+    "required_skills": ["React", "Node.js", "TypeScript"],
+    "experience_level": "Mid",
+    "company_type": "startup",
+    "location": "San Francisco, CA",
+    "salary": "$120k - $150k"
+  },
+  {
+    "description": "Java backend engineer for banking infrastructure",
+    "required_skills": ["Java", "Spring Boot", "SQL"],
+    "experience_level": "Senior",
+    "company_type": "enterprise",
+    "location": "London, UK",
+    "salary": "90k - 120k GBP"
+  },
+  {
+    "description": "Data Scientist focusing on LLM models",
+    "required_skills": ["Python", "PyTorch", "LLM"],
+    "experience_level": "Senior",
+    "company_type": "startup",
+    "location": "Remote",
+    "salary": "$150k - $200k"
+  },
+  {
+    "description": "DevOps Engineer for cloud deployments",
+    "required_skills": ["AWS", "Docker", "Kubernetes"],
+    "experience_level": "Mid",
+    "company_type": "mnc",
+    "location": "Austin, TX",
+    "salary": "$115k - $135k"
+  },
+  {
+    "description": "Junior Web Developer creating marketing pages",
+    "required_skills": ["JavaScript", "HTML", "CSS"],
+    "experience_level": "Junior",
+    "company_type": "sme",
+    "location": "Chicago, IL",
+    "salary": "$60k - $75k"
+  },
+  {
+    "description": "Python Developer for ETL and data pipelines",
+    "required_skills": ["Python", "SQL", "Airflow"],
+    "experience_level": "Junior",
+    "company_type": "enterprise",
+    "location": "Boston, MA",
+    "salary": "$80k - $95k"
+  },
+  {
+    "description": "Senior Fullstack Typescript Engineer",
+    "required_skills": ["React", "Node.js", "GraphQL", "TypeScript"],
+    "experience_level": "Senior",
+    "company_type": "startup",
+    "location": "Remote",
+    "salary": "$140k - $180k"
+  },
+  {
+    "description": "Golang Backend Engineer for high-throughput system",
+    "required_skills": ["Golang", "gRPC", "Kafka"],
+    "experience_level": "Mid",
+    "company_type": "mnc",
+    "location": "Remote",
+    "salary": "$130k - $160k"
+  },
+  {
+    "description": "Mobile App Developer creating cross-platform apps",
+    "required_skills": ["React Native", "JavaScript", "Redux"],
+    "experience_level": "Mid",
+    "company_type": "startup",
+    "location": "Los Angeles, CA",
+    "salary": "$110k - $135k"
+  },
+  {
+    "description": "Machine Learning Engineer for computer vision",
+    "required_skills": ["Python", "TensorFlow", "OpenCV"],
+    "experience_level": "Senior",
+    "company_type": "enterprise",
+    "location": "Seattle, WA",
+    "salary": "$155k - $190k"
+  },
+  {
+    "description": "System Administrator maintaining legacy systems",
+    "required_skills": ["Linux", "Bash", "Python"],
+    "experience_level": "Junior",
+    "company_type": "sme",
+    "location": "Denver, CO",
+    "salary": "$65k - $85k"
+  },
+  {
+    "description": "Vue.js Frontend Engineer for dashboard application",
+    "required_skills": ["Vue.js", "Vuex", "JavaScript"],
+    "experience_level": "Mid",
+    "company_type": "startup",
+    "location": "Remote",
+    "salary": "$100k - $120k"
+  },
+  {
+    "description": "C++ Game Developer for Unreal Engine project",
+    "required_skills": ["C++", "Unreal Engine", "3D Math"],
+    "experience_level": "Mid",
+    "company_type": "mnc",
+    "location": "Austin, TX",
+    "salary": "$105k - $140k"
+  },
+  {
+    "description": "Rust Engineer for blockchain infrastructure",
+    "required_skills": ["Rust", "Cryptography", "Algorithms"],
+    "experience_level": "Senior",
+    "company_type": "startup",
+    "location": "Remote",
+    "salary": "$160k - $210k"
+  },
+  {
+    "description": "Lead UI/UX Designer bridging design and code",
+    "required_skills": ["Figma", "HTML", "CSS", "React"],
+    "experience_level": "Senior",
+    "company_type": "sme",
+    "location": "New York, NY",
+    "salary": "$125k - $145k"
+  },
+  {
+    "description": "Junior QA Automation Engineer writing test scripts",
+    "required_skills": ["Python", "Selenium", "pytest"],
+    "experience_level": "Junior",
+    "company_type": "enterprise",
+    "location": "Remote",
+    "salary": "$70k - $85k"
+  },
+  {
+    "description": "Cloud Architect designing scalable AWS solutions",
+    "required_skills": ["AWS", "Terraform", "Kubernetes"],
+    "experience_level": "Senior",
+    "company_type": "mnc",
+    "location": "Washington D.C.",
+    "salary": "$170k - $210k"
+  },
+  {
+    "description": "Entry-level Data Analyst parsing user metrics",
+    "required_skills": ["SQL", "Python", "Excel"],
+    "experience_level": "Junior",
+    "company_type": "startup",
+    "location": "Miami, FL",
+    "salary": "$55k - $75k"
+  },
+  {
+    "description": "Cybersecurity Analyst for vulnerability assessment",
+    "required_skills": ["Security+", "Network Protocols", "Python"],
+    "experience_level": "Mid",
+    "company_type": "enterprise",
+    "location": "Remote",
+    "salary": "$95k - $120k"
+  },
+  {
+    "description": "Site Reliability Engineer keeping platforms stable",
+    "required_skills": ["Linux", "Docker", "Datadog", "Python"],
+    "experience_level": "Mid",
+    "company_type": "mnc",
+    "location": "San Francisco, CA",
+    "salary": "$130k - $160k"
+  },
+  {
+    "description": "Ruby on Rails Developer for e-commerce API",
+    "required_skills": ["Ruby", "Rails", "PostgreSQL"],
+    "experience_level": "Senior",
+    "company_type": "sme",
+    "location": "Chicago, IL",
+    "salary": "$115k - $145k"
+  },
+  {
+    "description": "Flutter Developer building iOS and Android apps",
+    "required_skills": ["Flutter", "Dart", "Firebase"],
+    "experience_level": "Junior",
+    "company_type": "startup",
+    "location": "Remote",
+    "salary": "$80k - $100k"
+  },
+  {
+    "description": "Game AI Programmer developing NPC behavior",
+    "required_skills": ["C++", "C#", "Artificial Intelligence"],
+    "experience_level": "Senior",
+    "company_type": "mnc",
+    "location": "Los Angeles, CA",
+    "salary": "$140k - $175k"
+  },
+  {
+    "description": "Technical Writer compiling API documentation",
+    "required_skills": ["Markdown", "Git", "JavaScript"],
+    "experience_level": "Junior",
+    "company_type": "sme",
+    "location": "Remote",
+    "salary": "$60k - $80k"
+  },
+  {
+    "description": "Frontend Architect mapping out enterprise UI guidelines",
+    "required_skills": ["React", "TypeScript", "Webpack", "Micro-frontends"],
+    "experience_level": "Senior",
+    "company_type": "enterprise",
+    "location": "New York, NY",
+    "salary": "$160k - $220k"
+  },
+  {
+    "description": "PHP/Laravel Backend Engineer for CRM replacement",
+    "required_skills": ["PHP", "Laravel", "MySQL"],
+    "experience_level": "Mid",
+    "company_type": "startup",
+    "location": "Denver, CO",
+    "salary": "$90k - $120k"
+  },
+  {
+    "description": "Systems Programmer writing safe drivers in Rust",
+    "required_skills": ["Rust", "Linux Kernel", "C"],
+    "experience_level": "Mid",
+    "company_type": "mnc",
+    "location": "Seattle, WA",
+    "salary": "$145k - $185k"
+  },
+  {
+    "description": "Web3 Developer auditing and writing smart contracts",
+    "required_skills": ["Solidity", "Web3.js", "Ethereum"],
+    "experience_level": "Senior",
+    "company_type": "startup",
+    "location": "Miami, FL",
+    "salary": "$170k - $250k"
+  }
+]
