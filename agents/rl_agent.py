@@ -16,21 +16,20 @@ class QLearningAgent:
 
     def _extract_state(self, state: Dict[str, Any]) -> Tuple:
         """Converts the environment dictionary state into a discrete hashable tuple."""
-        job_desc = state.get("job_description", "").lower()
-        skills = [s.lower() for s in state.get("candidate_skills", [])]
+        cand_skills = [s.lower() for s in state.get("candidate_skills", [])]
+        req_skills = [s.lower() for s in state.get("required_skills", [])]
+        
         cand_exp = state.get("experience_level", "mid").lower()
         req_exp = state.get("experience_required", "not specified").lower()
         
-        # Skill matching
-        skill_count = sum(1 for skill in skills if skill in job_desc)
+        # Skill matching: How many candidate skills are actually required?
+        skill_match_count = sum(1 for skill in cand_skills if skill in req_skills)
         
         # Location matching
         job_loc = state.get("location", "remote").lower()
         is_remote = 1 if "remote" in job_loc else 0
         
-        # Salary matching status
-        # Note: We'd ideally parse salary here too, but for state discrete representation, 
-        # let's just categorize the salary string if possible.
+        # Salary level categorization
         sal_str = state.get("salary", "0").lower()
         if any(x in sal_str for x in ["150", "160", "170", "180", "190", "200"]):
             sal_level = "high"
@@ -39,7 +38,7 @@ class QLearningAgent:
         else:
             sal_level = "low"
             
-        return (skill_count, cand_exp, req_exp, is_remote, sal_level)
+        return (skill_match_count, cand_exp, req_exp, is_remote, sal_level)
 
     def _get_q(self, state: Tuple, action: Tuple) -> float:
         return self.q_table.get((state, action), 0.0)
@@ -78,6 +77,13 @@ class QLearningAgent:
             # Bellman update
             new_q = old_q + self.alpha * (reward + self.gamma * max_next_q - old_q)
             self.q_table[(self.last_state, self.last_action)] = new_q
+
+    def feedback(self, state: Dict[str, Any], reward: float):
+        """Allows the agent to learn from the reward of its last action."""
+        # Note: This is a simplified feedback for online learning during app interaction.
+        # It assumes the environment has already transitioned, but doesn't strictly 
+        # require the next state for this simplified update.
+        self.update(reward, next_state_env=None, done=True)
     def save_model(self, filepath: str):
         """Saves current Q-table to a JSON file."""
         import json

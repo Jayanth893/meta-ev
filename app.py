@@ -1,11 +1,14 @@
 import gradio as gr
 import matplotlib.pyplot as plt
 from env.environment import JobApplyEnv
-from agents.baseline_agent import BaselineAgent
+from agents.rl_agent import QLearningAgent
+import os
 
 # Global environment instance to maintain state across interactions
 env = JobApplyEnv()
-agent = BaselineAgent(threshold=0.5)
+agent = QLearningAgent()
+if os.path.exists("rl_model.json"):
+    agent.load_model("rl_model.json")
 
 session_state = {
     "user_score": 0.0,
@@ -131,7 +134,7 @@ def generate_plot():
     plt.tight_layout()
     return fig
 
-def take_action(action_type, mode):
+def take_action(action_type, resume_ver, mode):
     # Current state
     state = env.state()
     agent_action = agent.act(state)
@@ -139,7 +142,7 @@ def take_action(action_type, mode):
     # User action
     user_action = {
         "apply": action_type == "apply",
-        "resume_version": "general"
+        "resume_version": resume_ver
     }
     
     # If in AI Agent mode, the "User" choice is forced to the Agent choice
@@ -173,7 +176,7 @@ def take_action(action_type, mode):
     if ai_reward < 0:
         session_state["ai_bad_decisions"] += 1
     
-    # Provide feedback to the rule-based agent to avoid future mistakes
+    # Provide feedback to the agent
     agent.feedback(state, ai_reward)
         
     if len(session_state["user_reward_history"]) > 20:
@@ -185,24 +188,49 @@ def take_action(action_type, mode):
     ai_color = "#28a745" if ai_reward > 0 else "#dc3545" if ai_reward < 0 else "#6c757d"
     
     reward_md = f"""
-<div style='display: flex; gap: 20px;'>
-    <div style='flex: 1; border-left: 4px solid {color}; padding-left: 10px;'>
-        <div style='font-size: 12px; color: #666;'>YOUR REWARD</div>
-        <h2 style='color:{color}; margin: 0;'>{user_reward:+.1f}</h2>
+<div style='display: flex; gap: 20px; animation: fadeIn 0.5s ease-out;'>
+    <div style='flex: 1; border-left: 6px solid {color}; padding: 15px; background: rgba(0,0,0,0.02); border-radius: 0 10px 10px 0;'>
+        <div style='font-size: 14px; color: #666; font-weight: bold;'>YOUR REWARD</div>
+        <h1 style='color:{color}; margin: 0; font-size: 36px;'>{user_reward:+.1f}</h1>
+        <div style='font-size: 12px; color: {color}77;'>{"Great Choice!" if user_reward > 0.5 else "Keep trying..." if user_reward < 0 else "Neutral"}</div>
     </div>
-    <div style='flex: 1; border-left: 4px solid {ai_color}; padding-left: 10px; opacity: 0.8;'>
-        <div style='font-size: 12px; color: #666;'>AI REWARD</div>
-        <h2 style='color:{ai_color}; margin: 0;'>{ai_reward:+.1f}</h2>
+    <div style='flex: 1; border-left: 6px solid {ai_color}; padding: 15px; background: rgba(0,0,0,0.02); border-radius: 0 10px 10px 0; opacity: 0.8;'>
+        <div style='font-size: 14px; color: #666; font-weight: bold;'>AI REWARD</div>
+        <h1 style='color:{ai_color}; margin: 0; font-size: 36px;'>{ai_reward:+.1f}</h1>
+        <div style='font-size: 12px; color: {ai_color}77;'>({agent_action['resume_version']})</div>
     </div>
 </div>
 """
     
     score_md = f"""
-| Player | Total Score | Avg Reward | Success Apps | Bad Decisions |
-| :--- | :--- | :--- | :--- | :--- |
-| **👤 You** | {session_state['user_score']:.1f} | {session_state['user_score']/max(1, session_state['episodes']):.2f} | {session_state['successful_apps']} | {session_state['bad_decisions']} |
-| **🤖 AI** | {session_state['ai_score']:.1f} | {session_state['ai_score']/max(1, session_state['episodes']):.2f} | {session_state['ai_successful_apps']} | {session_state['ai_bad_decisions']} |
-| **🔄 Eps** | {session_state['episodes']} | **Step:** {env.current_step}/{env.max_steps} | | |
+<div style="background: white; padding: 20px; border-radius: 16px; border: 1px solid #e0e0e0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div style="text-align: center; flex: 1;">
+            <div style="font-size: 24px;">👤</div>
+            <div style="font-weight: 800; color: #1a73e8; font-size: 28px;">{session_state['user_score']:.1f}</div>
+            <div style="font-size: 10px; color: #777; text-transform: uppercase;">Total Score</div>
+        </div>
+        <div style="text-align: center; border-left: 1px solid #eee; border-right: 1px solid #eee; flex: 1; padding: 0 10px;">
+             <div style="font-size: 18px; color: #666; margin-top: 10px;">Episode <b>{session_state['episodes']}</b></div>
+             <div style="font-size: 12px; color: #999;">Step {env.current_step}/{env.max_steps}</div>
+        </div>
+        <div style="text-align: center; flex: 1;">
+            <div style="font-size: 24px;">🤖</div>
+            <div style="font-weight: 800; color: #5f6368; font-size: 28px;">{session_state['ai_score']:.1f}</div>
+            <div style="font-size: 10px; color: #777; text-transform: uppercase;">Total Score</div>
+        </div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+        <div style="background: #f1f3f4; padding: 10px; border-radius: 8px;">
+            <b>Success:</b> {session_state['successful_apps']}<br/>
+            <b>Mistakes:</b> {session_state['bad_decisions']}
+        </div>
+        <div style="background: #f1f3f4; padding: 10px; border-radius: 8px;">
+            <b>Success:</b> {session_state['ai_successful_apps']}<br/>
+            <b>Mistakes:</b> {session_state['ai_bad_decisions']}
+        </div>
+    </div>
+</div>
 """
     
     # Prepare next state
@@ -226,79 +254,92 @@ def reset_game():
     env.reset()
     job_md, cand_md, agent_md = get_state_display()
     
-    score_md = """
-| Player | Total Score | Avg Reward | Success Apps | Bad Decisions |
-| :--- | :--- | :--- | :--- | :--- |
-| **👤 You** | 0.0 | 0.00 | 0 | 0 |
-| **🤖 AI** | 0.0 | 0.00 | 0 | 0 |
-| **🔄 Eps** | 0 | | | |
+    score_md = f"""
+<div style="background: white; padding: 20px; border-radius: 16px; border: 1px solid #e0e0e0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
+    <h3 style="color: #666;">Ready to start!</h3>
+    <p style="color: #999; font-size: 14px;">Select your action below to compete against the RL agent.</p>
+</div>
 """
-    waiting_md = "<h2 style='margin: 0; color: #6c757d;'>Waiting for action...</h2>"
+    waiting_md = "<h2 style='margin: 0; color: #6c757d; font-style: italic;'>Awaiting your first decision...</h2>"
     
     return cand_md, job_md, agent_md, waiting_md, score_md, generate_plot()
 
 # Build Gradio UI
-footer_css = """
-footer a, footer button {
-    font-size: 1.25rem !important;
-    padding: 0.5rem 1rem !important;
+custom_css = """
+footer {visibility: hidden}
+.gradio-container {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
 }
-footer img, footer svg {
-    width: 1.5rem !important;
-    height: 1.5rem !important;
+.apply-btn {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+}
+.skip-btn {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    border: none !important;
 }
 """
-with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue"), css=footer_css) as iface:
-    gr.Markdown("# 🚀 Interactive Job Application Env: Human vs AI")
-    gr.Markdown("Test your intuition against our trained Reinforcement Learning agent!")
+
+with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", font=[gr.themes.GoogleFont("Inter"), "sans-serif"]), css=custom_css) as iface:
+    gr.HTML("""
+<div style="text-align: center; padding: 40px 0; background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: white; border-radius: 24px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(13, 71, 161, 0.2);">
+    <h1 style="font-size: 42px; margin: 0; font-weight: 900; letter-spacing: -1px;">🚀 Meta-Ev: Job Search RL</h1>
+    <p style="font-size: 18px; opacity: 0.9; margin-top: 10px; font-weight: 400;">Can you outperform a trained Reinforcement Learning agent in the job market?</p>
+</div>
+""")
 
     with gr.Row():
+        with gr.Column(scale=3):
+            with gr.Row():
+                with gr.Column():
+                    cand_box = gr.HTML()
+                with gr.Column():
+                    job_box = gr.HTML()
+            
+            with gr.Row(variant="compact"):
+                 with gr.Column(scale=2):
+                    resume_ver = gr.Dropdown(
+                        choices=["general", "frontend_focused", "backend_focused", "fullstack"],
+                        value="general",
+                        label="📄 Choose Resume Version",
+                        info="Matching the resume to the job helps improve match quality."
+                    )
+                 with gr.Column(scale=3):
+                    with gr.Row():
+                        apply_btn = gr.Button("✅ Apply to Job", variant="primary", elem_classes=["apply-btn"], size="lg")
+                        skip_btn = gr.Button("⏭️ Skip Listing", variant="secondary", elem_classes=["skip-btn"], size="lg")
+            
         with gr.Column(scale=2):
-            score_display = gr.Markdown("""
-| Player | Total Score | Avg Reward | Success Apps | Bad Decisions |
-| :--- | :--- | :--- | :--- | :--- |
-| **👤 You** | 0.0 | 0.00 | 0 | 0 |
-| **🤖 AI** | 0.0 | 0.00 | 0 | 0 |
-| **🔄 Eps** | 0 | | | |
-""")
-        with gr.Column(scale=1):
+            score_display = gr.HTML()
+            reward_display = gr.HTML()
+            agent_md_box = gr.HTML()
+            
             mode_toggle = gr.Radio(
                 choices=["Manual Mode", "AI Agent"], 
                 value="Manual Mode", 
                 label="🎮 Interaction Mode",
-                info="In AI mode, buttons will automatically use the agent's choice."
+                info="In AI mode, your decisions are replaced by the RL agent's optimal choices."
             )
-            reward_display = gr.HTML("<h2 style='margin: 0; color: #6c757d;'>Waiting for action...</h2>")
+
+    with gr.Row():
+        plot_box = gr.Plot(label="Comparison History (Recent Rewards)")
         
     gr.Markdown("---")
-        
     with gr.Row():
-        with gr.Column(scale=1):
-            cand_box = gr.HTML()
-        with gr.Column(scale=1):
-            job_box = gr.HTML()
-            agent_md_box = gr.HTML()
-            
-    with gr.Row():
-        apply_btn = gr.Button("✅ Apply", variant="primary", size="lg")
-        skip_btn = gr.Button("⏭️ Skip", variant="secondary", size="lg")
-        
-    with gr.Row():
-        plot_box = gr.Plot(label="User Reward History (Last 20)")
-        
-    gr.Markdown("---")
-    reset_btn = gr.Button("🔄 Reset Everything", size="sm")
+        gr.Markdown("### 🛠️ Lab Controls")
+        reset_btn = gr.Button("🔄 Reset Simulation & Scores", size="sm")
 
     # Wire up logic
     apply_btn.click(
-        fn=lambda mode: take_action("apply", mode), 
-        inputs=[mode_toggle], 
+        fn=lambda rv, mode: take_action("apply", rv, mode), 
+        inputs=[resume_ver, mode_toggle], 
         outputs=[cand_box, job_box, agent_md_box, reward_display, score_display, plot_box]
     )
     
     skip_btn.click(
-        fn=lambda mode: take_action("skip", mode), 
-        inputs=[mode_toggle], 
+        fn=lambda rv, mode: take_action("skip", rv, mode), 
+        inputs=[resume_ver, mode_toggle], 
         outputs=[cand_box, job_box, agent_md_box, reward_display, score_display, plot_box]
     )
     
@@ -307,12 +348,13 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue"), css=footer_css) as ifac
         inputs=[],
         outputs=[cand_box, job_box, agent_md_box, reward_display, score_display, plot_box]
     )
-
-    # Load initial state automatically
+    
+    # Load initial state
     iface.load(
         fn=reset_game,
         inputs=[],
         outputs=[cand_box, job_box, agent_md_box, reward_display, score_display, plot_box]
     )
 
-iface.launch(server_port=7864)
+if __name__ == "__main__":
+    iface.launch()

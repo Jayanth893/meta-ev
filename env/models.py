@@ -39,6 +39,7 @@ class State:
                  candidate_skills: List[str], 
                  experience_level: str, 
                  job_description: str, 
+                 required_skills: List[str],
                  company_type: str, 
                  experience_required: str, 
                  location: str, 
@@ -49,6 +50,7 @@ class State:
         self.candidate_skills = candidate_skills
         self.experience_level = experience_level
         self.job_description = job_description
+        self.required_skills = required_skills
         self.company_type = company_type
         self.experience_required = experience_required
         self.location = location
@@ -63,6 +65,7 @@ class State:
             "candidate_skills": self.candidate_skills,
             "experience_level": self.experience_level,
             "job_description": self.job_description,
+            "required_skills": self.required_skills,
             "company_type": self.company_type,
             "experience_required": self.experience_required,
             "location": self.location,

@@ -1,6 +1,8 @@
 import random
 import json
 import os
+import re
+from datetime import datetime
 from typing import Dict, Any, Tuple
 from env.models import State
 
@@ -35,6 +37,7 @@ class JobApplyEnv:
             self.candidate["skills"],
             self.candidate["experience"],
             self.current_job.get("description", ""),
+            self.current_job.get("required_skills", []),
             self.current_job.get("company_type", "startup"),
             self.current_job.get("experience_level", "Mid"),
             self.current_job.get("location", "Remote"),
@@ -48,7 +51,6 @@ class JobApplyEnv:
         """Simple parser to convert string like '$70k - $90k' to numeric min/max."""
         try:
             # Handle cases like "90k - 120k GBP" or "$70k - $90k"
-            import re
             nums = re.findall(r'(\d+)', salary_str.lower())
             if not nums: return 0, 0
             
@@ -85,7 +87,6 @@ class JobApplyEnv:
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         log_file = os.path.join(base_dir, "logs.txt")
         
-        from datetime import datetime
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Format the log block
