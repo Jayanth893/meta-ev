@@ -30,5 +30,12 @@ dev = [
     "isort"
 ]
 
+[project.scripts]
+server = "server.app:app"
+
 [tool.setuptools]
 package-dir = {"" = "."}
+
+[tool.uv]
+managed = true
+package = true

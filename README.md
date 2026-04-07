@@ -6,7 +6,7 @@ colorTo: indigo
 sdk: docker
 # sdk_version: 5.5.0 # SDK version is not used with docker
 python_version: "3.10"
-app_file: server.py
+app_file: server/app.py
 pinned: false
 ---
 
