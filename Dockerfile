@@ -17,5 +17,8 @@ COPY . .
 # Expose the default port (HF Spaces/OpenEnv usually expect 7860)
 EXPOSE 7860
 
+# Set PYTHONPATH to include the root directory for module discovery
+ENV PYTHONPATH=/app
+
 # Start the server using the main function
 CMD ["python", "server/app.py"]
