@@ -40,7 +40,9 @@ def run_evaluation(server_url="http://localhost:7860"):
         
     print(f"Evaluation complete. Total Reward: {total_reward}")
 
-if __name__ == "__main__":
-    # If run directly, test against local server
-    # run_evaluation()
+def main():
+    """Main function for inference logic."""
     pass
+
+if __name__ == "__main__":
+    main()

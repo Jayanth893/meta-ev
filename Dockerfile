@@ -17,5 +17,5 @@ COPY . .
 # Expose the default port (HF Spaces/OpenEnv usually expect 7860)
 EXPOSE 7860
 
-# Start the uvicorn server serving server/app.py
-CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
+# Start the server using the main function
+CMD ["python", "server/app.py"]

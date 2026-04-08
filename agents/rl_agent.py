@@ -37,8 +37,25 @@ class QLearningAgent:
             sal_level = "mid"
         else:
             sal_level = "low"
+
+        # Job Type classification (Frontend / Backend / Fullstack)
+        job_desc = state.get("job_description", "").lower()
+        front_kws = ["front", "react", "ui", "ux", "vue", "web"]
+        back_kws = ["back", "node", "api", "server", "docker", "cloud", "aws", "data", "ml"]
+        
+        is_front = any(k in job_desc for k in front_kws)
+        is_back = any(k in job_desc for k in back_kws)
+        
+        if is_front and is_back:
+            job_type = "fullstack"
+        elif is_front:
+            job_type = "frontend"
+        elif is_back:
+            job_type = "backend"
+        else:
+            job_type = "other"
             
-        return (skill_match_count, cand_exp, req_exp, is_remote, sal_level)
+        return (skill_match_count, cand_exp, req_exp, is_remote, sal_level, job_type)
 
     def _get_q(self, state: Tuple, action: Tuple) -> float:
         return self.q_table.get((state, action), 0.0)

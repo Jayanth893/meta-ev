@@ -356,5 +356,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", font=[gr.themes.GoogleFo
         outputs=[cand_box, job_box, agent_md_box, reward_display, score_display, plot_box]
     )
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for the Gradio interface."""
     iface.launch()
+
+if __name__ == "__main__":
+    main()

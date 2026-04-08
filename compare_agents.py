@@ -48,7 +48,7 @@ def evaluate_agent(env: JobApplyEnv, agent, episodes: int = 1000) -> float:
 
 def train_and_compare():
     # Shared environment — max_steps=10 means 10 job decisions per episode.
-    env = JobApplyEnv(max_steps=10)
+    env = JobApplyEnv(max_steps=10, enable_logging=False)
     baseline = BaselineAgent()
     rl_agent  = QLearningAgent(alpha=0.1, gamma=0.9, epsilon=0.15)
 

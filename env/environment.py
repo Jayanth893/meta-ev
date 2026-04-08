@@ -7,7 +7,8 @@ from typing import Dict, Any, Tuple
 from env.models import State
 
 class JobApplyEnv:
-    def __init__(self, max_steps=10):
+    def __init__(self, max_steps=10, enable_logging=True):
+        self.enable_logging = enable_logging
         # Load jobs from JSON file
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         with open(os.path.join(base_dir, "data", "jobs.json"), "r") as f:
@@ -75,7 +76,8 @@ class JobApplyEnv:
         done = self.current_step >= self.max_steps
         
         # Log the interaction
-        self._log_step(current_state_dict, action, reward)
+        if self.enable_logging:
+            self._log_step(current_state_dict, action, reward)
         
         if not done:
             self.current_job = random.choice(self.jobs)
@@ -142,8 +144,31 @@ class JobApplyEnv:
             else:
                 sal_impact = 0.1 # Within range
                 
-        # Aggregate Quality (Ideal range roughly -0.5 to 1.0)
-        match_quality = skill_score + exp_impact + loc_impact + sal_impact
+        # 5. Resume Alignment (0.0 or 0.15)
+        resume_ver = action.get("resume_version", "general")
+        job_desc = self.current_job.get("description", "").lower()
+        
+        resume_impact = 0
+        if resume_ver != "general":
+            frontend_keywords = ["front", "react", "ui", "ux", "vue", "web"]
+            backend_keywords = ["back", "node", "api", "server", "docker", "cloud", "aws", "data", "ml"]
+            
+            is_frontend_job = any(k in job_desc for k in frontend_keywords)
+            is_backend_job = any(k in job_desc for k in backend_keywords)
+            
+            if resume_ver == "frontend_focused" and is_frontend_job and not is_backend_job:
+                resume_impact = 0.15
+            elif resume_ver == "backend_focused" and is_backend_job and not is_frontend_job:
+                resume_impact = 0.15
+            elif resume_ver == "fullstack" and is_frontend_job and is_backend_job:
+                resume_impact = 0.15
+            elif resume_ver == "fullstack" and (is_frontend_job or is_backend_job):
+                resume_impact = 0.05 # Partial credit
+            else:
+                resume_impact = -0.05 # Slight penalty for wrong resume version
+        
+        # Aggregate Quality (Ideal range roughly -0.5 to 1.15)
+        match_quality = skill_score + exp_impact + loc_impact + sal_impact + resume_impact
         
         if action["apply"]:
             # Final Reward clamped between -1 and 1
